@@ -3,21 +3,21 @@ import time
 import pyodbc
 import jaydebeapi
 import pandas as pd
+from dotenv import load_dotenv
 
-BASE_DIR    = os.path.dirname(__file__)
-JDBC_JAR    = os.path.join(BASE_DIR, "postgresql-42.7.5.jar")
-JDBC_DRIVER = "org.postgresql.Driver"
-JDBC_URL    = "jdbc:postgresql://localhost:6969/martyr"
-USER        = "martyr"
-PASSWORD    = "123321"
+load_dotenv()
+
+JDBC_DRIVER = os.getenv("JDBC_DRIVER")
+JDBC_URL    = os.getenv("JDBC_URL")
+JDBC_JAR    = os.getenv("JDBC_JAR")
 
 ODBC_CONN_STR = (
-    "DRIVER=PostgreSQL;"
-    "SERVER=localhost;"
-    "PORT=6969;"
-    "DATABASE=martyr;"
-    "UID=martyr;"
-    "PWD=123321"
+    f"DRIVER={os.getenv('ODBC_DRIVER')};"
+    f"SERVER={os.getenv('ODBC_SERVER')};"
+    f"PORT={os.getenv('ODBC_PORT')};"
+    f"DATABASE={os.getenv('ODBC_DATABASE')};"
+    f"UID={os.getenv('ODBC_UID')};"
+    f"PWD={os.getenv('ODBC_PWD')}"
 )
 
 def run_query(method: str, query: str):
@@ -25,7 +25,9 @@ def run_query(method: str, query: str):
     try:
         if method == "JDBC":
             conn = jaydebeapi.connect(
-                JDBC_DRIVER, JDBC_URL, [USER, PASSWORD], JDBC_JAR
+                JDBC_DRIVER, JDBC_URL,
+                [os.getenv("PG_USER"), os.getenv("PG_PASSWORD")],
+                JDBC_JAR
             )
         elif method == "ODBC":
             conn = pyodbc.connect(ODBC_CONN_STR)

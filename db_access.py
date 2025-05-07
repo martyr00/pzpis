@@ -1,23 +1,28 @@
+import os
 import time
 import mysql.connector
 import psycopg2
+from dotenv import load_dotenv
 from mysql.connector import Error as MySQLError
 from psycopg2 import DatabaseError as PGError
 
+load_dotenv()
+
 MYSQL_CONFIG = {
-    "host":     "localhost",
-    "port":     9696,
-    "user":     "root",
-    "password": "",
-    "database": "music_app",
+    "host":     os.getenv("MYSQL_HOST"),
+    "port":     int(os.getenv("MYSQL_PORT")),
+    "user":     os.getenv("MYSQL_USER"),
+    "password": os.getenv("MYSQL_PASSWORD"),
+    "database": os.getenv("MYSQL_DATABASE"),
 }
 
 PG_CONFIG = {
-    "host":     "localhost",
-    "port":     6969,
-    "user":     "martyr",
-    "password": "123321",
+    "host":     os.getenv("PG_HOST"),
+    "port":     int(os.getenv("PG_PORT")),
+    "user":     os.getenv("PG_USER"),
+    "password": os.getenv("PG_PASSWORD"),
 }
+
 
 def connect_mysql():
     return mysql.connector.connect(**MYSQL_CONFIG)
