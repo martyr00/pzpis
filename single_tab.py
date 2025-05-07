@@ -20,33 +20,32 @@ class SingleTab(QWidget):
 
         # вибір БД і таблиці для перегляду
         h1 = QHBoxLayout()
-        h1.addWidget(QLabel("БД:"))
+        h1.addWidget(QLabel("BD:"))
         self.db_selector = QComboBox()
         self.db_selector.addItems(["MySQL", "PostgreSQL"])
         h1.addWidget(self.db_selector)
-        h1.addWidget(QLabel("Таблиця для перегляду:"))
+        h1.addWidget(QLabel("Table:"))
         self.table_selector = QComboBox()
         self.table_selector.addItems(TABLE_NAMES)
         h1.addWidget(self.table_selector)
         layout.addLayout(h1)
 
-        # поле введення запиту
         self.query_input = CodeEditor()
-        self.query_input.setPlaceholderText("Введіть SQL-запит тут")
+        self.query_input.setPlaceholderText("SQL input")
         layout.addWidget(self.query_input)
 
         # кнопка виконати
-        self.run_btn = QPushButton("Виконати запит")
+        self.run_btn = QPushButton("Execute")
         self.run_btn.clicked.connect(self.execute)
         layout.addWidget(self.run_btn)
 
         # вміст таблиці ДО запиту
-        layout.addWidget(QLabel("Вміст таблиці ДО запиту:"))
+        layout.addWidget(QLabel("Result:"))
         self.before_table = QTableWidget()
         layout.addWidget(self.before_table)
 
         # час виконання
-        self.time_label = QLabel("Час виконання: ")
+        self.time_label = QLabel("Time: ")
         layout.addWidget(self.time_label)
 
     def execute(self):
@@ -54,26 +53,23 @@ class SingleTab(QWidget):
         tbl = self.table_selector.currentText().strip()
         query = self.query_input.toPlainText().strip()
 
-        # якщо запит порожній, відобразити всю таблицю
         if not query and tbl:
             query = f"SELECT * FROM {tbl};"
 
-        # показати ДО запиту
         if tbl:
             try:
                 rows, cols, _ = run_single_query(db, f"SELECT * FROM {tbl}")
                 self._fill_table(self.before_table, rows, cols)
             except Exception as e:
-                QMessageBox.warning(self, "Помилка", f"Не вдалося отримати дані з {tbl}:\n{e}")
+                QMessageBox.warning(self, "Err", f"Failed data from {tbl}:\n{e}")
                 return
 
-        # виконати сам запит
         try:
             rows, cols, t = run_single_query(db, query)
-            self.time_label.setText(f"Час виконання: {t:.4f} с")
+            self.time_label.setText(f"Time: {t:.4f} с")
             self._fill_table(self.before_table, rows, cols)
         except Exception as e:
-            QMessageBox.critical(self, "Помилка виконання", str(e))
+            QMessageBox.critical(self, "Failed", str(e))
 
     def _fill_table(self, table: QTableWidget, rows, cols):
         table.clear()

@@ -8,7 +8,6 @@ from PyQt5.QtWidgets import (
 from code_editor import CodeEditor
 from db_access import distributed_transaction
 
-# Загрузить список таблиц из .env
 load_dotenv()
 TABLE_NAMES = []
 env_tables = os.getenv("TABLE_NAMES", "").strip()
@@ -20,47 +19,44 @@ class DistributedTab(QWidget):
         super().__init__()
         layout = QVBoxLayout(self)
 
-        # MySQL-запрос
-        layout.addWidget(QLabel("MySQL — DML-запит:"))
+        layout.addWidget(QLabel("MySQL — DML-q"))
         self.mysql_query = CodeEditor()
-        self.mysql_query.setPlaceholderText("SQL для MySQL")
+        self.mysql_query.setPlaceholderText("SQL input")
         layout.addWidget(self.mysql_query)
 
-        # Выбор таблицы MySQL после
         h1 = QHBoxLayout()
-        h1.addWidget(QLabel("Таблиця MySQL після:"))
+        h1.addWidget(QLabel("View MySQL:"))
         self.mysql_table = QComboBox()
         self.mysql_table.addItems(TABLE_NAMES)
         h1.addWidget(self.mysql_table)
         layout.addLayout(h1)
 
-        # PostgreSQL-запрос
-        layout.addWidget(QLabel("PostgreSQL — DML-запит:"))
+        layout.addWidget(QLabel("PostgreSQL — DML-q:"))
         self.pg_query = CodeEditor()
-        self.pg_query.setPlaceholderText("SQL для PostgreSQL")
+        self.pg_query.setPlaceholderText("SQL input")
         layout.addWidget(self.pg_query)
 
         # Выбор таблицы PostgreSQL после
         h2 = QHBoxLayout()
-        h2.addWidget(QLabel("Таблиця PostgreSQL після:"))
+        h2.addWidget(QLabel("View PostgreSQL:"))
         self.pg_table = QComboBox()
         self.pg_table.addItems(TABLE_NAMES)
         h2.addWidget(self.pg_table)
         layout.addLayout(h2)
 
-        self.exec_btn = QPushButton("Виконати розподілену транзакцію")
+        self.exec_btn = QPushButton("Execute")
         self.exec_btn.clicked.connect(self.execute_tx)
         layout.addWidget(self.exec_btn)
 
-        self.time_label = QLabel("Час виконання транзакції: ")
+        self.time_label = QLabel("Time: ")
         layout.addWidget(self.time_label)
 
         # Результаты
-        layout.addWidget(QLabel("Вміст MySQL після:"))
+        layout.addWidget(QLabel("Result MySQL:"))
         self.mysql_result = QTableWidget()
         layout.addWidget(self.mysql_result)
 
-        layout.addWidget(QLabel("Вміст PostgreSQL після:"))
+        layout.addWidget(QLabel("Result PostgreSQL:"))
         self.pg_result = QTableWidget()
         layout.addWidget(self.pg_result)
 
@@ -78,10 +74,10 @@ class DistributedTab(QWidget):
             self._fill_table(self.mysql_result, m_rows, m_cols)
             self._fill_table(self.pg_result, pg_rows, pg_cols)
 
-            self.time_label.setText(f"Час виконання транзакції: {exec_time:.4f} с")
-            QMessageBox.information(self, "Готово", "Розподілена транзакція успішно виконана.")
+            self.time_label.setText(f"Time: {exec_time:.4f} с")
+            QMessageBox.information(self, "Done.", "Successfully completed.")
         except Exception as e:
-            QMessageBox.critical(self, "Помилка транзакції", f"Транзакцію відмінено:\n{e}")
+            QMessageBox.critical(self, "Err", f"Transaction canceled:\n{e}")
 
     def _fill_table(self, table: QTableWidget, rows, cols):
         table.clear()
