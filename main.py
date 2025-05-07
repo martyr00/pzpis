@@ -7,7 +7,7 @@ from distributed_tab import DistributedTab
 class DBApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("DB GUI — 3 вкладки")
+        self.setWindowTitle("DB GUI")
         self.resize(900, 700)
 
         tabs = QTabWidget()
