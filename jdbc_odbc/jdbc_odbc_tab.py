@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QTextEdit, QPushButton,
-    QTableWidget, QTableWidgetItem, QMessageBox, QComboBox
+    QPushButton, QTableWidget, QTableWidgetItem, QMessageBox, QComboBox
 )
+from code_editor import CodeEditor
 from jdbc_odbc.jdbc_odbc_access import run_query
 
 class JDBCODBCTab(QWidget):
@@ -17,7 +17,7 @@ class JDBCODBCTab(QWidget):
         h1.addWidget(self.method_selector)
         layout.addLayout(h1)
 
-        self.query_input = QTextEdit()
+        self.query_input = CodeEditor()
         self.query_input.setPlaceholderText("SQL")
         layout.addWidget(self.query_input)
 

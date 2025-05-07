@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QLineEdit, QTextEdit, QPushButton,
+    QLineEdit, QPushButton,
     QTableWidget, QTableWidgetItem, QMessageBox, QComboBox
 )
+from code_editor import CodeEditor
 from db_access import run_single_query
 
 class SingleTab(QWidget):
@@ -20,7 +21,7 @@ class SingleTab(QWidget):
         h1.addWidget(self.table_input)
         layout.addLayout(h1)
 
-        self.query_input = QTextEdit()
+        self.query_input = CodeEditor()
         self.query_input.setPlaceholderText("SQL")
         layout.addWidget(self.query_input)
 

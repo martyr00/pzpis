@@ -1,4 +1,7 @@
 import sys
+
+import qdarkstyle
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QTabWidget, QVBoxLayout
 from single_tab import SingleTab
 from jdbc_odbc.jdbc_odbc_tab import JDBCODBCTab
@@ -11,8 +14,8 @@ class DBApp(QWidget):
         self.resize(900, 700)
 
         tabs = QTabWidget()
-        tabs.addTab(SingleTab(),      "mySQL/postSQL query")
         tabs.addTab(JDBCODBCTab(),    "JDBC/ODBC")
+        tabs.addTab(SingleTab(),      "mySQL/postSQL query")
         tabs.addTab(DistributedTab(), "Distributed transaction")
 
         layout = QVBoxLayout(self)
@@ -20,6 +23,7 @@ class DBApp(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     win = DBApp()
     win.show()
     sys.exit(app.exec_())
